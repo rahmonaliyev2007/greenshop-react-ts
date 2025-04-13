@@ -5,32 +5,10 @@ import { useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { fetchFlowers } from "../../../../hooks/LikeFn";
 import { MainMappingLoading } from "../../../Loading";
+import { MainMappingProps, ParamsSet, Product, ProductsResponse } from "../../../../../types/HomeTypes";
 
-interface MainMappingProps {
-  currentPage: number;
-  setCurrentPage: (page: number) => void;
-}
 
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  category: string;
-}
 
-interface ProductsResponse {
-  data: Product[];
-  category: string;
-  sort: string;
-  type: string;
-  range_min: string;
-  range_max: string;
-}
-interface ParamsSet {
-  category: string;
-  sort: string;
-  type: string;
-}
 
 const MainMapping: FC<MainMappingProps> = ({ currentPage, setCurrentPage }) => {
   const [searchParams, setSearchParams] = useSearchParams();

@@ -1,7 +1,7 @@
-import React from "react";
+import React, { FC } from "react";
 import CategoriesMain from "./Main";
 
-const Categories = () => {
+const Categories:FC = () => {
   return (
     <CategoriesMain />
   );

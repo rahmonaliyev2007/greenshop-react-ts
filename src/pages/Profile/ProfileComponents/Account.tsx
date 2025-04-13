@@ -1,30 +1,30 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react'
+import React, { FormEvent, useEffect, useState } from 'react'
 import { toast } from 'sonner';
 const api = import.meta.env.VITE_PUBLIC_GREENSHOP_API
 
 
 export default function Account() {
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [surname, setSurname] = useState('');
-    const [phone_number, setPhone] = useState('');
-    const [username, setUsername] = useState('');
-    const [_id, setID] = useState('')
-    const { user } = JSON.parse(localStorage.getItem("user"));
+    const [name, setName] = useState<string>('');
+    const [email, setEmail] = useState<string>('');
+    const [surname, setSurname] = useState<string>('');
+    const [phone_number, setPhone] = useState<string>('');
+    const [username, setUsername] = useState<string>('');
+    const [_id, setID] = useState<string>('')
+    const {user} = JSON.parse(localStorage.getItem("user") || '{}');
     const token = user?.token;
-    const profile_photo = 'https://www.shutterstock.com/image-vector/default-avatar-profile-icon-vector-600nw-1745180411.jpg'
+    const profile_photo : string = 'https://www.shutterstock.com/image-vector/default-avatar-profile-icon-vector-600nw-1745180411.jpg'
 
     useEffect(() => {
         setName(user?.name || '');
         setEmail(user?.email || '');
         setSurname(user?.surname || '');
-        setPhone(user?.phone_number || JSON.parse(localStorage.getItem('phone_number')) || '');
+        setPhone(user?.phone_number || JSON.parse(localStorage.getItem('phone_number') || '""'));
         setUsername(user?.username || '');
         setID(user?._id || '')
     }, [])
 
-    const handleUpdateUser = async (e) => {
+    const handleUpdateUser = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         try{
@@ -37,8 +37,8 @@ export default function Account() {
             localStorage.setItem('phone_number', JSON.stringify(phone_number))
             toast.success('User updated successfully')
         }
-        catch(error){
-            toast.error(` Error while updating user: ${error.message}`)
+        catch(error: any){
+            toast.error(` Error while updating user: ${error?.message || 'Unknown error'}`)
         } 
     }
 

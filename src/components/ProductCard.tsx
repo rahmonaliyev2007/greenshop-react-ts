@@ -1,30 +1,43 @@
 import axios from "axios";
 import { Heart, Search, ShoppingCart } from "lucide-react";
-import { useState } from "react";
+import { useState, FC } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { LikeFlower, UnlikeFlower } from "../hooks/LikeFn";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, removeFromCart } from "../redux/cartSlice";
-const api = import.meta.env.VITE_PUBLIC_GREENSHOP_API
-const accessToken = JSON.parse(localStorage.getItem("user"))?.user?._id || '64bebc1e2c6d3f056a8c85b7';
 
-export default function ProductCard({ data }) {
+const api = import.meta.env.VITE_PUBLIC_GREENSHOP_API;
+const accessToken: string = JSON.parse(localStorage.getItem("user"))?.user?._id || '64bebc1e2c6d3f056a8c85b7';
+
+interface ProductData {
+    title: string;
+    _id: string;
+    main_image: string;
+    price: number;
+    discount_price: number;
+    category: string;
+    discount?: boolean;
+}
+
+interface ProductCardProps {
+    data: ProductData;
+}
+
+const ProductCard: FC<ProductCardProps> = ({ data }) => {
     if (!data) return <div>Product Not Valid</div>;
     let { title: name, _id: id, main_image, price, discount_price, category: route_path, discount: isSale } = data;
     if(name === "Peace Lil"){
         route_path = 'house-plants'
     }
     const Wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
-    const wish = Wishlist.some(item => item.flower_id === id);
+    const wish:Partial<boolean> = Wishlist.some(item => item.flower_id === id);
     const navigate = useNavigate();
     const [isLiked, setIsLiked] = useState(wish);
-    const cartItems = useSelector((state) => state.cart.cart);
+    const cartItems = useSelector((state: any) => state.cart.cart);
     const isInCart = cartItems.some(item => item.id === id);
     const dispatch = useDispatch();
     
-    
-
     const handleLike = () => {
         const user = JSON.parse(localStorage.getItem("user"))?.user || null;
         if (!user) {
@@ -52,7 +65,7 @@ export default function ProductCard({ data }) {
         }
     };
 
-    const calculateDiscountPercent = (originalPrice, discountedPrice) => {
+    const calculateDiscountPercent = (originalPrice: number, discountedPrice: number): number => {
         const discounted = Number(discountedPrice);
         if (!originalPrice || !discounted || originalPrice <= discounted) return 0;
         return Math.round(((originalPrice - discounted) / originalPrice) * 100);
@@ -60,12 +73,11 @@ export default function ProductCard({ data }) {
 
     const discountPercent = calculateDiscountPercent(price, discount_price);
 
-
     return (
         <div className="max-w-[300px] w-full border-t-2 border-t-transparent hover:border-t-[#46A358] transi group rounded">
             <div className="card_img relative transi rounded overflow-hidden ">
                 <div onClick={() => navigate(`/aboutProduct/${route_path}/${id}`)} className="bg-[#FBFBFB] cursor-pointer transi w-full product_card_img max-sm:h-[250px] max-md:h-[200px] h-[275px] flex justify-center items-center">
-                    <img width={250} height={250} priority src={main_image} alt={name} className="w-full h-auto object-contain mix-blend-multiply scale-100 group-hover:scale-110 transi" />
+                    <img width={250} height={250} src={main_image} alt={name} className="w-full h-auto object-contain mix-blend-multiply scale-100 group-hover:scale-110 transi" />
                 </div>
                 <div className="flex max-sm:hidden justify-center items-center absolute w-full bottom-0 transi gap-0.5 opacity-0 group-hover:opacity-100 group-hover:gap-3 group-hover:bottom-2">
                     <button onClick={handleCartClick} className={`p-2 hover:bg-gray-200 transi bg-white rounded cursor-pointer ${isInCart ? 'text-[#46A358]' : ''}`}>
@@ -95,4 +107,6 @@ export default function ProductCard({ data }) {
             </div>
         </div>
     );
-}
+};
+
+export default ProductCard;

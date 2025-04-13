@@ -1,9 +1,17 @@
 import axios from "axios";
+import { FC, Dispatch, SetStateAction } from "react";
 import { toast } from "sonner";
 const api = import.meta.env.VITE_PUBLIC_GREENSHOP_API
 const accessToken = JSON.parse(localStorage.getItem("user"))?.user?._id || '64bebc1e2c6d3f056a8c85b7';
 
-export const LikeFlower = async (route_path, flower_id, name, setIsLiked) => {
+interface LikeFlowerProps {
+    flower_id: string;
+    route_path: string;
+    name: string;
+    setIsLiked: Dispatch<SetStateAction<boolean>>;
+}
+
+export const LikeFlower:FC<Partial<LikeFlowerProps>> = async ( route_path, flower_id, name, setIsLiked ) => {
     try {
         const response = await axios.post(`${api}/user/create-wishlist?access_token=${accessToken}`, {
             route_path,
@@ -12,7 +20,7 @@ export const LikeFlower = async (route_path, flower_id, name, setIsLiked) => {
 
         if (response.data.message === 'success') {
             toast.success(`${name} ❤️`, { description: ` added to your wishlist 😍 !` });
-            const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+            const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
             const updatedWishlist = [...wishlist, { route_path, flower_id }];
             localStorage.setItem('wishlist', JSON.stringify(updatedWishlist));
             setIsLiked(true);
@@ -24,8 +32,6 @@ export const LikeFlower = async (route_path, flower_id, name, setIsLiked) => {
         toast.error("Something went wrong while adding to wishlist.");
     }
 };
-
-
 
 export const UnlikeFlower = async (route_path, flower_id, name, setIsLiked) => {
     try {
@@ -47,28 +53,27 @@ export const UnlikeFlower = async (route_path, flower_id, name, setIsLiked) => {
     }
 }
 
-
-export const fetchFlower = async ({ queryKey }) => {
-    const [_key, route_path, id] = queryKey;
+export const fetchFlower = async ({ queryKey }:object) => {
+    const [_key, route_path, id]:Array<object> = queryKey;
     const { data } = await axios.get(`${api}flower/category/${route_path}/${id}?access_token=${accessToken}`);
     return data.data;
 }
 
-export const fetchUser = async ({queryKey})=>{
+export const fetchUser = async ({ queryKey }:any) => {
     const [_key, id] = queryKey;
-    const {data} = await axios.get(`${api}/user/by_id/${id}?access_token=${accessToken}`);
+    const { data } = await axios.get(`${api}/user/by_id/${id}?access_token=${accessToken}`);
     return data.data;
 }
 
-export const fetchUserImg = async ({ queryKey }) => {
+export const fetchUserImg = async ({ queryKey }:any) => {
     const [_key, id] = queryKey;
     if (!id) return null;
     const { data } = await axios.get(`${api}user/by_id/${id}?access_token=${accessToken}`);
     return data.data;
 }
 
-export const fetchFlowers = async ({ queryKey }) => {
+export const fetchFlowers = async ({ queryKey }:any) => {
     const [_key, category, sort, filter, min, max] = queryKey;
     const response = await fetch(`${api}flower/category/${category}?access_token=${accessToken}&sort=${sort}&type=${filter}&range_min=${min}&range_max=${max}`);
     return response.json();
-  }
+}

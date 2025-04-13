@@ -1,11 +1,11 @@
-import { useState, useRef } from "react";
+import { useState, useRef, FC } from "react";
 import { Carousel } from "antd";
 import { useNavigate } from "react-router-dom";
 import { CarouselRef } from "antd/es/carousel";
 import { Slides } from "../../../../types/HomeTypes";
 
 
-const HeroCarousel = () => {
+const HeroCarousel:FC = () => {
     const navigate = useNavigate();
     const slides : Slides[] = [
         {

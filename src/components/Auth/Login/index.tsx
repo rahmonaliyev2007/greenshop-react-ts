@@ -1,20 +1,24 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { FC, useState, ChangeEvent, FormEvent, Dispatch, SetStateAction } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { signInWithGoogle } from '../../../../firebase';
 import { Facebook, QrCode } from 'lucide-react';
+import { ErrorsType, LoginProps, UserType } from '../../../../types/HomeTypes';
 
 const api = import.meta.env.VITE_PUBLIC_GREENSHOP_API
 const apikey = import.meta.env.VITE_PUBLIC_ACCESS_TOKEN
 
-function Login({ setIsModalOpen, setIsLogged }) {
-  const [user, setUser] = useState({ email: '', password: '' });
-  const [errors, setErrors] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
+
+
+
+const Login: FC<LoginProps> = ({ setIsModalOpen, setIsLogged }) => {
+  const [user, setUser] = useState<UserType>({ email: '', password: '' });
+  const [errors, setErrors] = useState<Partial<ErrorsType>>({});
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigate = useNavigate()
 
-  const handleSetValue = (e) => {
+  const handleSetValue = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setUser((prevUser) => ({ ...prevUser, [name]: value }));
     setErrors((prevErrors) => ({ ...prevErrors, [name]: '' }));
@@ -33,9 +37,9 @@ function Login({ setIsModalOpen, setIsLogged }) {
     toast.success(`You Successfully logged in as ${response?.data?.data?.user?.name}`);
   }
 
-  const handleLoginCheck = async (e) => {
+  const handleLoginCheck = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    let newErrors = {};
+    let newErrors:Partial<ErrorsType> = {};
 
     if (!user.email.trim()) newErrors.email = 'Please enter your email';
     if (!user.password.trim()) newErrors.password = 'Please enter your password';
@@ -58,7 +62,7 @@ function Login({ setIsModalOpen, setIsLogged }) {
 
       navigate('/profile/account')
     } catch (err) {
-      setErrors({ apiError: err?.response?.data?.extraMessage || 'Login failed. ' });
+      
       toast.error(`Failed on login, please make sure you have entered the correct email and password`);
 
     }
