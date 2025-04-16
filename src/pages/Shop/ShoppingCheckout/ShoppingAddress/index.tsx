@@ -75,8 +75,10 @@ export default function Shopping_Address({addressData, setAddressData}: any) {
 
                 <label className='w-full my-3' >
                     <div className='font-light text-sm'> Order notes <sup>( optional )</sup></div>
-                    <textarea className='w-full my-2 py-2 px-3 rounded-lg border bg-white' placeholder='enter some notes' value={addressData.textarea} onChange={(e) => setAddressData({ ...addressData, textarea: e.target.value })} />
+                    <textarea className='w-full my-2 py-2 px-3 rounded-lg border bg-white' placeholder='enter some notes' rows={5} value={addressData.textarea} onChange={(e) => setAddressData({ ...addressData, textarea: e.target.value })} />
                 </label>
+
+                
             </form>
         </div>
     );
