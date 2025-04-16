@@ -3,9 +3,9 @@ import { Image, Rate } from 'antd';
 import { Heart } from 'lucide-react';
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { fetchFlower, fetchUserImg, LikeFlower, UnlikeFlower } from '../../hooks/LikeFn';
-import { AboutProductLoading } from '../../components/Loading';
 import { toast } from 'sonner';
+import { fetchFlower, fetchUserImg, LikeFlower, UnlikeFlower } from '../../../hooks/LikeFn';
+import { AboutProductLoading } from '../../../components/Loading';
 
 export default function AboutProduct() {
     const { route_path, id } = useParams();

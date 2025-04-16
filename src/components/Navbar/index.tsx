@@ -12,11 +12,12 @@ const Navbar: FC = () => {
   const [isLogged, setIsLogged] = useState<boolean>(false);
   const [isLoginOpen, setIsLoginOpen] = useState<boolean>(false);
   const [isRegisterOpen, setIsRegisterOpen] = useState<boolean>(false);
-  const cartItems = useSelector((state: any) => state.cart.cart.length);
+  const cartItems = useSelector((state: any) => state.shopping.data.length);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const showModal = () => {
     setIsModalOpen(true); setIsLoginOpen(true); setIsRegisterOpen(false);
   };
+  
   const handleOk = () => { setIsModalOpen(false) };
   const handleCancel = () => { setIsModalOpen(false) };
   const navLinks: { name: string; path: string }[] = [
@@ -43,7 +44,7 @@ const Navbar: FC = () => {
         <ul className="flex gap-8 font-medium text-gray-700">
           {navLinks.map((link) => (
             <li key={link.path}>
-              <NavLink to={link.path} className={({ isActive }) => `py-[29px] border-b-2 transi hover:text-[#46A358] ${isActive ? "border-[#46A358] text-[#46A358]" : "border-transparent "}`}>
+              <NavLink to={link.path} className={({ isActive }) => `py-[29px] border-b-2 transi hover:text-[#46A358] ${isActive ? "border-[#46A358] text-[#46A358]" : isActive && pathname.includes('/aboutProduct') ? "border-[#46A358] text-[#46A358]" : "border-transparent "}`}>
                 {link.name}
               </NavLink>
             </li>
@@ -51,7 +52,7 @@ const Navbar: FC = () => {
         </ul>
         <div className="flex items-center">
           <button className="cursor-pointer hover:text-[#46A358] transition-all"><Search size={24} /></button>
-          <button className="relative cursor-pointer mx-6 hover:text-[#46A358] transition-all">
+          <button onClick={()=> router('/shop/shopping_cart')} className="relative cursor-pointer mx-6 hover:text-[#46A358] transition-all">
             <ShoppingCart size={24} />
             {cartItems > 0 && ( <div className="absolute -top-3 -right-3 text-xs grid place-items-center text-white rounded-full border-2 border-white bg-[#46A358] w-[25px] h-[25px]">
                 {cartItems}

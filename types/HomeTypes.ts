@@ -1,3 +1,6 @@
+import { Dispatch } from "@reduxjs/toolkit";
+import { SetStateAction } from "react";
+
 export interface CategoriesResponse {
   data: {
     id: number;
@@ -60,4 +63,47 @@ export interface ErrorsType{
   email: string,
   password: string,
   apiError: string
+}
+
+
+export interface ShoppingProductType {
+  _id: string;
+  title: string;
+  category: string;
+  price: number;
+  discount: boolean;
+  discount_price: string;
+  main_image: string;
+  detailed_images: string[];
+  short_description: string;
+  description: string;
+  tags: string[];
+  rate: number;
+  views: number;
+  sold_times: number;
+  comments: any[]; 
+  created_at: string;
+  created_by: string;
+  __v: number;
+  count: number;
+}
+
+export interface User {
+
+    user: {
+        _id: string;
+        name: string;
+        surname: string;
+        email: string;
+        phone_number: string;
+        token: string;
+        billing_address: {
+            country: string;
+            extra_address: string;
+            state: string;
+            street_address: string;
+            town: string;
+            zip: string;
+        };
+    }
 }

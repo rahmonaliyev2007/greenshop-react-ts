@@ -5,10 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { LikeFlower, UnlikeFlower } from "../hooks/LikeFn";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCart, removeFromCart } from "../redux/cartSlice";
-
-const api = import.meta.env.VITE_PUBLIC_GREENSHOP_API;
-const accessToken: string = JSON.parse(localStorage.getItem("user"))?.user?._id || '64bebc1e2c6d3f056a8c85b7';
+import { getter } from "../hooks/useLocalStorage";
+import { addDataToShopping, deleteFlowerFromShopping } from "../redux/ShoppingSlice";
 
 interface ProductData {
     title: string;
@@ -30,16 +28,16 @@ const ProductCard: FC<ProductCardProps> = ({ data }) => {
     if(name === "Peace Lil"){
         route_path = 'house-plants'
     }
-    const Wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+    const Wishlist = getter({key : 'wishlist'});
     const wish:Partial<boolean> = Wishlist.some(item => item.flower_id === id);
     const navigate = useNavigate();
     const [isLiked, setIsLiked] = useState(wish);
-    const cartItems = useSelector((state: any) => state.cart.cart);
-    const isInCart = cartItems.some(item => item.id === id);
+    const cartItems = useSelector((state: any) => state.shopping.data);
+    const isInCart = cartItems.some(item => item._id === id);
     const dispatch = useDispatch();
     
     const handleLike = () => {
-        const user = JSON.parse(localStorage.getItem("user"))?.user || null;
+        const user = getter({key: 'user'})?.user;
         if (!user) {
             toast.warning('Please Login or register first')
             return
@@ -50,18 +48,13 @@ const ProductCard: FC<ProductCardProps> = ({ data }) => {
             LikeFlower(route_path, id, name, setIsLiked);            
         }
     };
-
-    const handleAddToCart = () => {
-        dispatch(addToCart({ id, name, main_image, price }));
-        toast.success("Added to Cart 🛒", { description: `${name} has been successfully added to your cart.` });
-    };
-
     const handleCartClick = () => {
         if (isInCart) {
-            dispatch(removeFromCart(id));
+            dispatch(deleteFlowerFromShopping({_id: id}));
             toast.error("Removed from Cart 🗑️", { description: `${name} has been removed from your cart.` });
         } else {
-            handleAddToCart();
+            dispatch(addDataToShopping({...data}));
+            toast.success("Added to Cart 🛒", { description: `${name} has been successfully added to your cart.` });    
         }
     };
 

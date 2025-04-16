@@ -1,17 +1,23 @@
 import { Heart, LogOut, MapPin, ShoppingBag, Truck, User } from "lucide-react";
 import { NavLink, Outlet } from "react-router-dom";
 import { Modal } from "antd";
+import { toast } from "sonner";
+import { getter } from "../../hooks/useLocalStorage";
 
 export default function ProfileLayout() {
 
     const handleLogout = () => {
+        const name = getter({key : ' user '}).name
         Modal.confirm({
             title: "Are you sure you want to log out?",
             content: "Your shopping cart will also be cleared.",
             onOk() {
                 localStorage.clear();
+                toast.success(`Logged out successfully`);
                 // clearCart();
-                window.location.href = "/";
+                setTimeout(()=>{
+                    window.location.href = "/";
+                }, 2000);
             },
             onCancel() {},
         });

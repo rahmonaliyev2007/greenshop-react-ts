@@ -6,9 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchFlowers } from "../../../../hooks/LikeFn";
 import { MainMappingLoading } from "../../../Loading";
 import { MainMappingProps, ParamsSet, Product, ProductsResponse } from "../../../../../types/HomeTypes";
-
-
-
+import { Select } from "antd";
 
 const MainMapping: FC<MainMappingProps> = ({ currentPage, setCurrentPage }) => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -34,8 +32,8 @@ const MainMapping: FC<MainMappingProps> = ({ currentPage, setCurrentPage }) => {
   const { data: products = { data: [] }, error, isLoading, isFetching } = useQuery<ProductsResponse>({
     queryKey: ["flower", category, sort, selectedFilter, min, max],
     queryFn: () => fetchFlowers({ queryKey: ["flower", category, sort, selectedFilter, min, max] }),
-    staleTime: 1000 * 60 * 5,
-    cacheTime: 1000 * 60 * 10,
+    staleTime: Infinity,
+    cacheTime: Infinity,
   });
 
   const totalPages = Math.ceil(products?.data?.length / onePage);
@@ -53,11 +51,14 @@ const MainMapping: FC<MainMappingProps> = ({ currentPage, setCurrentPage }) => {
         </ul>
         <div className="flex max-md:hidden justify-end gap-3 items-center font-semibold">
           <p>Sorting:
-            <select name="sort" className="outline-none font-normal" id="sort" value={sort} onChange={(e) => { setSortOrder(e.target.value); setSearchParams({ category, sort: e.target.value, type: selectedFilter, range_min: min, range_max: max }); }}>
-              <option value="default-sorting">Default Sorting</option>
-              <option value="the-cheapest">The Cheapest</option>
-              <option value="most-expensive">Most Expensive</option>
-            </select>
+            <Select defaultValue="default-sorting" value={sort} onChange={(value) => {setSortOrder(value);}}
+              options={[
+                { value: "default-sorting", label: "Default Sorting" },
+                { value: "the-cheapest", label: "The Cheapest" },
+                { value: "most-expensive", label: "Most Expensive" },
+              ]}
+              style={{ width: 160 }}
+            />
           </p>
         </div>
         <button className="md:hidden"><SlidersHorizontal /></button>
