@@ -5,6 +5,8 @@ import { Radio } from 'antd'
 
 export default function ShoppingOrder({ addressData }: any) {
     const products = useSelector((state: any) => state.shopping)
+    const shipping = products.data.length * 5 > 16 ? products.data.length * 5 : 16
+    const total = +products.total + shipping
     const navigate = useNavigate();
     return (
         <div className='w-[35%]'>
@@ -29,14 +31,14 @@ export default function ShoppingOrder({ addressData }: any) {
                 <div className='flex justify-between items-center my-3'>
                     <p >Shiping</p>
                     <div className='flex flex-col items-end'>
-                        <span className='font-semibold text-base'>${products.data.length * 5 > 16 ? products.data.length * 5 : 16}</span>
+                        <span className='font-semibold text-base'>${shipping}</span>
                         <span className='font-light text-xs text-[#46A358] cursor-pointer'>View shiping change</span>
                     </div>
                 </div>
                 <hr className='border-none h-[1px] bg-[#46A35880]' />
                 <div className='flex justify-between items-center my-5'>
                     <p className='font-semibold text-base'>Total</p>
-                    <span className='font-semibold text-base text-[#46A358] '>${(products.total).toFixed(2) || 0}</span>
+                    <span className='font-semibold text-base text-[#46A358] '>${(total).toFixed(2) || 0}</span>
                 </div>
                 <div className="my-5">
                     <p className="font-semibold text-base mb-2">Payment Method</p>
@@ -53,6 +55,7 @@ export default function ShoppingOrder({ addressData }: any) {
                     </Radio.Group>
                 </div>
                 <button disabled className='bg-[#46A358] cursor-not-allowed opacity-50 transi logo text-white p-2 rounded w-full font-semibold' >Place Order</button>
+                <p>order not available yet</p>
             </div>
         </div>
     )

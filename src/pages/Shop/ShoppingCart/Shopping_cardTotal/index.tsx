@@ -8,6 +8,7 @@ export default function Shopping_CardTotal() {
     const [isLoading, setIsLoading] = useState<boolean>();
     const total = useSelector((state) => state?.shopping);
     const navigate = useNavigate();
+    const shipping = total.data.length * 5 > 16 ? total.data.length * 5 : 16
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -34,13 +35,13 @@ export default function Shopping_CardTotal() {
             <div className='flex justify-between items-center my-2'>
                 <p className='font-light'>Shiping</p>
                 <div className='flex flex-col items-end'>
-                    <span className='font-semibold text-base'>${total.data.length * 5 > 16 ? total.data.length * 5 : 16}</span>
+                    <span className='font-semibold text-base'>${shipping}</span>
                     <span className='font-light text-xs text-[#46A358] cursor-pointer'>View shiping change</span>
                 </div>
             </div>
             <div className='flex justify-between items-center my-5'>
                 <p className='font-semibold text-base'>Total</p>
-                <span className='font-semibold text-base text-[#46A358] '>${(total.total).toFixed(2) || 0}</span>
+                <span className='font-semibold text-base text-[#46A358] '>${(total.total + shipping).toFixed(2) || 0}</span>
             </div>
             <button onClick={()=> navigate('/shop/shopping_checkout')} disabled={total.data.length === 0} className={`w-full p-2 bg-[#46A358] text-white font-medium rounded ${total.data.length === 0 ? "opacity-50 cursor-not-allowed" : "opacity-100 cursor-pointer"} hover:bg-[#2e6d3b] transi`}>Proceed To Checkout</button>
             <p className='text-center text-[#46A358] font-light mt-3 cursor-pointer' onClick={()=> navigate('/')} >Continue Shopping</p>
