@@ -17,7 +17,7 @@ export default function ShoppingProductCard({ product }: any) {
             </div>
             <div className='w-[15%] text-start font-semibold text-black/60'>${product.price}</div>
             <div className='w-[20%] text-center flex items-center gap-2'>
-                <button className={`bg-[#46A358] text-white w-6 h-6 rounded-full transi ${product.count === 1 ? ' opacity-50' : ''}`} onClick={() => {{dispatch(decreaseCountFromShopping({ _id: product._id }))}}}disabled={product.count === 1}>-</button>
+                <button className={`bg-[#46A358] text-white w-6 h-6 rounded-full transi ${product.count === 1 ? ' opacity-50' : ''}`} onClick={() => {dispatch(decreaseCountFromShopping({ _id: product._id }))}} disabled={product.count === 1}>-</button>
                 <span className='font-bold w-4 text-center '>{product.count}</span>
                 <button className='bg-[#46A358] text-white w-6 h-6 rounded-full' onClick={() => dispatch(increaseCountFromShopping({ _id: product._id }))}>+</button>
             </div>

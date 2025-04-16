@@ -6,6 +6,8 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import { fetchFlower, fetchUserImg, LikeFlower, UnlikeFlower } from '../../../hooks/LikeFn';
 import { AboutProductLoading } from '../../../components/Loading';
+import { useDispatch, useSelector } from 'react-redux';
+import { addDataToShopping, decreaseCountFromShopping, deleteFlowerFromShopping, increaseCountFromShopping } from '../../../redux/ShoppingSlice';
 
 export default function AboutProduct() {
     const { route_path, id } = useParams();
@@ -14,6 +16,10 @@ export default function AboutProduct() {
     const [currentImg, setCurrentImg] = useState(null);
     const navigate = useNavigate();
     const [isLiked, setIsLiked] = useState(false);
+    const cart = useSelector((state) => state.shopping);
+    const product = cart.data.find((prod) => prod._id === id) || { count: 0 };
+    const isInCart = cart.data.some((item) => item._id === id);
+    const dispatch = useDispatch();
 
     const { data, error, isLoading } = useQuery({
         queryKey: ['flower', route_path, id],
@@ -31,7 +37,6 @@ export default function AboutProduct() {
         }
         window.scrollTo(0, 0)
     }, [data]);
-
     useEffect(() => {
         const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
         setIsLiked(wishlist.some(item => item.flower_id === data?._id));
@@ -44,17 +49,49 @@ export default function AboutProduct() {
             return
         }
         if (isLiked) {
-            UnlikeFlower(route_path, id, name, setIsLiked);
+            UnlikeFlower(route_path, id, product.title, setIsLiked);
         } else {
-            LikeFlower(route_path, id, name, setIsLiked);
+            LikeFlower(route_path, id, product.title, setIsLiked);
         }
     };
+
+    const handleCart = () => {
+        if (isInCart) {
+            dispatch(deleteFlowerFromShopping({ _id: id }));
+            toast.error("Removed from Cart 🗑️", { description: `${product.title} has been removed from your cart.` });
+        } else {
+            dispatch(addDataToShopping({ ...data }));
+            toast.success("Added to Cart 🛒", { description: `${data.title} has been successfully added to your cart.` });
+        }
+    }
+
+    const handleIncrease = () => {
+        if (product.count === 0) {
+            handleCart();
+        } else {
+            dispatch(increaseCountFromShopping({ _id: product._id }))
+        }
+    }
+    const handleDecrease = () => {
+        if (product.count !== 1) {
+            dispatch(decreaseCountFromShopping({ _id: product._id }))
+        } else {
+            handleCart();
+        }
+    }
+
+    const handleBuyNow = () => {
+        if (!isInCart) {
+            dispatch(addDataToShopping({ ...data }));
+        }
+        navigate(`/shop/shopping_cart`)
+    }
 
     if (error) return <div>Error: {error.message}</div>
     return (
         <>
             <div className='flex items-center gap-2 font-semibold text-[#42A358]/30 mt-5 mb-10'>
-                <Link to={-1} className="text-black/80 hover:text-[#42A358] hover:pr-2 transi ">Home</Link> / <Link to={`/shop`} className="text-black/80 hover:text-[#42A358] hover:pr-2 transi ">Shop</Link> / <p className="text-[#42A358]">{data?.title || 'product name'}</p>
+                <Link to={'/'} className="text-black/80 hover:text-[#42A358] hover:pr-2 transi ">Home</Link> / <Link to={`/shop`} className="text-black/80 hover:text-[#42A358] hover:pr-2 transi ">Shop</Link> / <p className="text-[#42A358]">{data?.title || 'product name'}</p>
             </div>
             {isLoading ? (<AboutProductLoading />) : (
                 <div className="flex justify-between items-start gap-10">
@@ -101,13 +138,13 @@ export default function AboutProduct() {
                                 <button className='border rounded-full w-8 h-8 hover:border-[#42A358] transi hover:text-[#42A358] font-semibold flex justify-center items-center'>XL</button>
                             </div>
                             <div className='flex items-center gap-3 my-3'>
-                                <button className='bg-[#45A538] font-light w-8 text-lg h-8 flex justify-center items-center text-white rounded-full'>-</button>
-                                <p className='text-2xl font-semibold'>0</p>
-                                <button className='bg-[#45A538] font-light w-8 text-lg h-8 flex justify-center items-center text-white rounded-full'>+</button>
+                                <button onClick={handleDecrease} disabled={product.count === 0} className={`bg-[#45A538] font-light w-8 text-lg h-8 flex justify-center items-center text-white rounded-full opacity-100 transi ${product.count === 0 && 'opacity-50'}`}>-</button>
+                                <p className='text-2xl font-semibold'>{product?.count}</p>
+                                <button onClick={handleIncrease} className='bg-[#45A538] font-light w-8 text-lg h-8 flex justify-center items-center text-white rounded-full'>+</button>
                             </div>
                             <div className='flex items-center gap-3'>
-                                <button className='bg-[#42A538] text-white py-2 border-[#42A358] border px-5 text-lg font-semibold rounded hover:bg-[#42A358]/20 hover:text-black/80 uppercase transi'>Buy Now</button>
-                                <button className='bg-white text-black/80 border border-[#42A358] py-2 text-lg px-2 font-semibold rounded hover:bg-[#42A358]/20  uppercase transi'>Add to Cart</button>
+                                <button onClick={handleBuyNow} className='bg-[#42A538] text-white py-2 border-[#42A358] border px-5 text-base font-semibold rounded hover:bg-[#42A358]/20 hover:text-black/80 uppercase transi'>Buy Now</button>
+                                <button onClick={handleCart} className='bg-white text-black/80 border border-[#42A358] py-2 text-base px-2 font-semibold rounded hover:bg-[#42A358]/20  uppercase transi'>{isInCart ? "Added to Cart" : "Add to Cart"}</button>
                                 <button className='p-2 texl-lg border border-[#42A358] rounded font-thin' onClick={() => handleLike()}><Heart fill={isLiked ? "red" : "none"} className={`${isLiked && 'text-red-500'}`} /></button>
                             </div>
                             <div>

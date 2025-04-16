@@ -7,37 +7,26 @@ import { LikeFlower, UnlikeFlower } from "../hooks/LikeFn";
 import { useDispatch, useSelector } from "react-redux";
 import { getter } from "../hooks/useLocalStorage";
 import { addDataToShopping, deleteFlowerFromShopping } from "../redux/ShoppingSlice";
+import { ProductData } from "../../types/HomeTypes";
 
-interface ProductData {
-    title: string;
-    _id: string;
-    main_image: string;
-    price: number;
-    discount_price: number;
-    category: string;
-    discount?: boolean;
-}
 
-interface ProductCardProps {
-    data: ProductData;
-}
 
-const ProductCard: FC<ProductCardProps> = ({ data }) => {
+const ProductCard: FC<ProductData> = ({ data }) => {
     if (!data) return <div>Product Not Valid</div>;
     let { title: name, _id: id, main_image, price, discount_price, category: route_path, discount: isSale } = data;
-    if(name === "Peace Lil"){
+    if (name === "Peace Lil") {
         route_path = 'house-plants'
     }
-    const Wishlist = getter({key : 'wishlist'});
-    const wish:Partial<boolean> = Wishlist.some(item => item.flower_id === id);
+    const Wishlist = getter({ key: 'wishlist' });
+    const wish: boolean = Wishlist.some(item => item.flower_id === id);
     const navigate = useNavigate();
     const [isLiked, setIsLiked] = useState(wish);
     const cartItems = useSelector((state: any) => state.shopping.data);
     const isInCart = cartItems.some(item => item._id === id);
     const dispatch = useDispatch();
-    
+
     const handleLike = () => {
-        const user = getter({key: 'user'})?.user;
+        const user = getter({ key: 'user' })?.user;
         if (!user) {
             toast.warning('Please Login or register first')
             return
@@ -45,16 +34,16 @@ const ProductCard: FC<ProductCardProps> = ({ data }) => {
         if (isLiked) {
             UnlikeFlower(route_path, id, name, setIsLiked);
         } else {
-            LikeFlower(route_path, id, name, setIsLiked);            
+            LikeFlower(route_path, id, name, setIsLiked);
         }
     };
     const handleCartClick = () => {
         if (isInCart) {
-            dispatch(deleteFlowerFromShopping({_id: id}));
+            dispatch(deleteFlowerFromShopping({ _id: id }));
             toast.error("Removed from Cart 🗑️", { description: `${name} has been removed from your cart.` });
         } else {
-            dispatch(addDataToShopping({...data}));
-            toast.success("Added to Cart 🛒", { description: `${name} has been successfully added to your cart.` });    
+            dispatch(addDataToShopping({ ...data }));
+            toast.success("Added to Cart 🛒", { description: `${name} has been successfully added to your cart.` });
         }
     };
 

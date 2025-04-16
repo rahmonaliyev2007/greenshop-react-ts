@@ -107,3 +107,15 @@ export interface User {
         };
     }
 }
+
+export interface ProductData {
+  data: {
+      title: string;
+      _id: string;
+      main_image: string;
+      price: number;
+      discount_price: number;
+      category: string;
+      discount?: boolean;
+  }
+}
