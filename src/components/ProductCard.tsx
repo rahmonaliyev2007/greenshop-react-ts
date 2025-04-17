@@ -9,8 +9,6 @@ import { getter } from "../hooks/useLocalStorage";
 import { addDataToShopping, deleteFlowerFromShopping } from "../redux/ShoppingSlice";
 import { ProductData } from "../../types/HomeTypes";
 
-
-
 const ProductCard: FC<ProductData> = ({ data }) => {
     if (!data) return <div>Product Not Valid</div>;
     let { title: name, _id: id, main_image, price, discount_price, category: route_path, discount: isSale } = data;

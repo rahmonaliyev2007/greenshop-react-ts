@@ -1,13 +1,81 @@
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import ShoppingOrderCard from './ShoppingOrderCard'
 import { useNavigate } from 'react-router-dom'
-import { Radio } from 'antd'
+import { Modal, Radio } from 'antd'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { handleMakeOrder } from '../../../../hooks/LikeFn'
+import { makeEverythingZero } from '../../../../redux/ShoppingSlice'
+import { getter } from '../../../../hooks/useLocalStorage'
+import { toast } from 'sonner'
+import { useState } from 'react'
 
-export default function ShoppingOrder({ addressData }: any) {
+export default function ShoppingOrder({ addressData, isFieldsFilled, setStartCheck }: any) {
     const products = useSelector((state: any) => state.shopping)
     const shipping = products.data.length * 5 > 16 ? products.data.length * 5 : 16
-    const total = +products.total + shipping
+    const totalPr = +products.total + shipping
     const navigate = useNavigate();
+    const { textarea, name, surname, extra_address } = addressData
+    const billing_address = { ...addressData, order_notes: textarea, first_name: name, last_name: surname, additional_street_address: extra_address, payment_method: 'cash-on-delivery' };
+    const total = products.total + shipping
+    const extra_shop_info = { total_price: total, method: "cash-on-delivery", shiping: shipping, coupon: products.coupon }
+    const dispatch = useDispatch();
+
+    const { mutate: makeOrder, data, error, isPending } = useMutation({
+        mutationKey: ["makeOrder"],
+        mutationFn: () => handleMakeOrder({ queryKey: ["makeOrder", products, billing_address, extra_shop_info] }),
+        onSuccess: (data: any) => {
+            dispatch(makeEverythingZero());
+            Modal.confirm({
+                icon: null, title: null, okText: "Track Order", cancelButtonProps: { style: { display: 'none' } },
+                content: (
+                    <div className="text-center">
+                        <p className="text-lg font-semibold mb-4">Your Order succesfully placed!</p>
+                    </div>
+                ),
+                okButtonProps: {
+                    className: "bg-[#46A358] hover:bg-[#46A358] text-white",
+                    style: {
+                        display: 'block',
+                        margin: '0 auto',
+                    }
+                },
+                onOk() {
+                    navigate("/profile/track");
+                },
+            });
+            onError: (error: any) => {
+                console.error("error:", error);
+            }
+        }
+    });
+
+    let [calledOnce, setCalledOnce] = useState(false);
+    const handleOrder = () => {
+        const { user } = getter({ key: "user" }) || {};
+
+        if (!user) {
+            toast.error("Please Login or Register first");
+            return;
+        }
+        if (!calledOnce) {
+            setStartCheck(true);  
+            setCalledOnce(true);
+            setTimeout(() => {
+                handleOrder();  
+            }, 50);
+            return;
+        }
+
+        
+        if (isFieldsFilled) {
+            makeOrder(); 
+        } else {
+            toast.error("Please fill all fields");
+        }
+
+        setCalledOnce(false);
+    };
+
     return (
         <div className='w-[35%]'>
             <p className='font-semibold text-lg'>Your Oder</p>
@@ -38,7 +106,7 @@ export default function ShoppingOrder({ addressData }: any) {
                 <hr className='border-none h-[1px] bg-[#46A35880]' />
                 <div className='flex justify-between items-center my-5'>
                     <p className='font-semibold text-base'>Total</p>
-                    <span className='font-semibold text-base text-[#46A358] '>${(total).toFixed(2) || 0}</span>
+                    <span className='font-semibold text-base text-[#46A358] '>${(totalPr).toFixed(2) || 0}</span>
                 </div>
                 <div className="my-5">
                     <p className="font-semibold text-base mb-2">Payment Method</p>
@@ -54,8 +122,7 @@ export default function ShoppingOrder({ addressData }: any) {
                         <Radio value="cash" className="!border !rounded-md !px-3 py-2">Cash on delivery</Radio>
                     </Radio.Group>
                 </div>
-                <button disabled className='bg-[#46A358] cursor-not-allowed opacity-50 transi logo text-white p-2 rounded w-full font-semibold' >Place Order</button>
-                <p>order not available yet</p>
+                <button onClick={handleOrder} disabled={products.data.length === 0} className={`bg-[#46A358] cursor-not-allowed transi logo text-white p-2 rounded w-full font-semibold ${products.data.length !== 0 ? "opacity-100" : "opacity-50"} `} >{isPending ? "Placing order" : "Place Order"}</button>
             </div>
         </div>
     )

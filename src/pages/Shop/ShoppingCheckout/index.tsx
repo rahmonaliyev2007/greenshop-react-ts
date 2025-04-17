@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Shopping_Address from './ShoppingAddress'
 import { User } from '../../../../types/HomeTypes';
@@ -20,6 +20,8 @@ export default function Shopping_checkout() {
     zip: initialZip || '',
     textarea: "",
   });
+  const [isFieldsFilled, setIsFieldsFilled] = useState(false);
+  const [startCheck , setStartCheck] = useState(false);
   return (
     <>
       <div className='flex items-center gap-2 font-semibold text-[#42A358]/30 mt-5 mb-10'>
@@ -30,8 +32,8 @@ export default function Shopping_checkout() {
       </div>
 
       <div className='flex justify-between items-start gap-10'>
-        <Shopping_Address addressData={addressData} setAddressData={setAddressData} />
-        <ShoppingOrder addressData={addressData} setAddressData={setAddressData} />
+        <Shopping_Address addressData={addressData} setAddressData={setAddressData} setIsFieldsFilled={setIsFieldsFilled} startCheck={startCheck} setStartCheck={setStartCheck}/>
+        <ShoppingOrder addressData={addressData} isFieldsFilled={isFieldsFilled} setStartCheck={setStartCheck} />
       </div>
     </>
   )
