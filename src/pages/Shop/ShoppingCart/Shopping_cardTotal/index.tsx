@@ -20,9 +20,9 @@ export default function Shopping_CardTotal() {
                 Cart Total
             </div>
             <p className='font-light my-2'>Coupon Apply</p>
-            <div className='flex items-center'>
-                <input type="text" className=' w-full p-2 rounded-l border outline-none border-[#46A358]' placeholder='enter coupon code here' />
-                <button className='bg-[#46A358] text-white font-semibold py-2 px-4 rounded-r border border-[#46A358]'>Apply</button>
+            <div className='flex items-center opacity-50 cursor-not-allowed'>
+                <input type="text" disabled className=' w-full cursor-not-allowed p-2 rounded-l border outline-none border-[#46A358]' placeholder='enter coupon code here' />
+                <button className='bg-[#46A358] cursor-not-allowed text-white font-semibold py-2 px-4 rounded-r border border-[#46A358]'>Apply</button>
             </div>
             <div className='flex justify-between items-center my-2'>
                 <p className='font-light'>Subtotal</p>

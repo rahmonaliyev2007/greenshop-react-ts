@@ -3,6 +3,6 @@
 @tailwind utilities;
 
 
-  .transi{
-    transition: all 0.3s ease !important;
-  }
+.transi {
+  transition: all 0.3s ease !important;
+}

@@ -1,14 +1,15 @@
 import { useDispatch, useSelector } from 'react-redux'
 import ShoppingOrderCard from './ShoppingOrderCard'
 import { useNavigate } from 'react-router-dom'
-import { Modal, Radio } from 'antd'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { Modal, Radio, Spin } from 'antd'
+import { useMutation } from '@tanstack/react-query'
 import { handleMakeOrder } from '../../../../hooks/LikeFn'
 import { makeEverythingZero } from '../../../../redux/ShoppingSlice'
 import { getter } from '../../../../hooks/useLocalStorage'
 import { toast } from 'sonner'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { X } from 'lucide-react'
+import { LoadingOutlined } from '@ant-design/icons'
 
 export default function ShoppingOrder({ addressData, isFieldsFilled, setStartCheck }: any) {
     const products = useSelector((state: any) => state.shopping)
@@ -40,56 +41,58 @@ export default function ShoppingOrder({ addressData, isFieldsFilled, setStartChe
                         cancelButtonProps: { style: { display: 'none' } },
                         content: (
                             <div className="text-sm max-w-[700px] w-full mx-auto relative">
-                              <button className="absolute right-0 top-0 text-xl font-bold text-gray-500 hover:text-gray-800" onClick={() => Modal.destroyAll()}
-                                    ><X />
-                              </button>
-                              <p className="text-lg font-bold mb-4 mt-2">Order Confirmation</p>
-                              <div className="grid grid-cols-2 text-sm mb-4 gap-4">
-                                <div><b>Order Number</b><br />{data?.data?._id.slice(-14) || 'N/A'}</div>
-                                <div><b>Date</b><br />{new Date(data.data.created_at).toDateString()}</div>
-                                <div><b>Total</b><br />${(data?.data?.total_price || total).toFixed(2)}</div>
-                                <div><b>Payment Method</b><br />{data?.data?.extra_shop_info.method || 'Other payment method'}</div>
-                              </div>
-                    
-                              <p className="font-semibold border-b pb-2 mb-2">Order Details</p>
-                    
-                              {data?.data?.shop_list?.map((item: any, idx: number) => (
-                                <div key={idx} className="flex items-center gap-4 border-b py-2">
-                                  <img src={item.main_image || ""} alt={item.title} className="w-12 h-12 object-cover" />
-                                  <div className="flex-grow">
-                                    <p>{item.title} <span className='text-xs text-gray-500'>( x{item.count})</span> </p>
-                                    <p className="text-xs text-gray-500">SKU: {item._id}</p>
-                                  </div>
-                                  <p className="font-medium text-[#46A358]">${(item.price * item.count).toFixed(2) || 0}</p>
+                                <button className="absolute right-0 top-0 text-xl font-bold text-gray-500 hover:text-gray-800" onClick={() => {Modal.destroyAll();  navigate('/')}}
+                                ><X />
+                                </button>
+                                <p className="text-lg font-bold mb-4 mt-2">Order Confirmation</p>
+                                <div className="grid grid-cols-2 text-sm mb-4 gap-4">
+                                    <div><b>Order Number</b><br />{data?.data?._id.slice(-14) || 'N/A'}</div>
+                                    <div><b>Date</b><br />{new Date(data.data.created_at).toDateString()}</div>
+                                    <div><b>Total</b><br />${(data?.data?.total_price || total).toFixed(2)}</div>
+                                    <div><b>Payment Method</b><br />{data?.data?.extra_shop_info.method || 'Other payment method'}</div>
                                 </div>
-                              ))}
-                              <div className="mt-4 text-right text-sm">
-                                <p>Shipping: <b className='text-[#46A358]'>${data?.data?.extra_shop_info?.shiping}</b></p>
-                                <p>Total: <b className='text-[#46A358]'>${(data?.data?.total_price || total).toFixed(2)}</b></p>
-                              </div>
-                    
-                              <p className="mt-5 text-center text-xs text-gray-600">
-                                Your order is currently being processed. You will receive an order confirmation email shortly with the expected delivery date.
-                              </p>
+
+                                <p className="font-semibold border-b pb-2 mb-2">Order Details</p>
+
+                                <div className='max-h-[250px] overflow-y-scroll'>
+                                {data?.data?.shop_list?.map((item: any, idx: number) => (
+                                    <div key={idx} className="flex items-center gap-4 border-b py-2">
+                                        <img src={item.main_image || ""} alt={item.title} className="w-12 h-12 object-cover" />
+                                        <div className="flex-grow">
+                                            <p>{item.title} <span className='text-xs text-gray-500'>( x{item.count})</span> </p>
+                                            <p className="text-xs text-gray-500">SKU: {item._id}</p>
+                                        </div>
+                                        <p className="font-medium text-[#46A358]">${(item.price * item.count).toFixed(2) || 0}</p>
+                                    </div>
+                                ))}
+                                </div>
+                                <div className="mt-4 text-right text-sm">
+                                    <p>Shipping: <b className='text-[#46A358]'>${data?.data?.extra_shop_info?.shiping}</b></p>
+                                    <p>Total: <b className='text-[#46A358]'>${(data?.data?.total_price || total).toFixed(2)}</b></p>
+                                </div>
+
+                                <p className="mt-5 text-center text-xs text-gray-600">
+                                    Your order is currently being processed. You will receive an order confirmation email shortly with the expected delivery date.
+                                </p>
                             </div>
                         ),
                         okButtonProps: {
-                          className: "bg-[#46A358] hover:bg-[#46A358] text-white",
-                          style: { display: 'block', margin: '0 auto' },
+                            className: "bg-[#46A358] hover:bg-[#46A358] text-white",
+                            style: { display: 'block', margin: '0 auto' },
                         },
                         onOk() {
-                          navigate("/profile/track");
+                            navigate("/profile/track");
                         }
                     })
                 ),
                 okButtonProps: {
-                  className: "bg-[#46A358] hover:bg-[#46A358] text-white",
-                  style: { display: 'block', margin: '0 auto' },
+                    className: "bg-[#46A358] hover:bg-[#46A358] text-white",
+                    style: { display: 'block', margin: '0 auto' },
                 },
                 onOk() {
-                  navigate("/profile/track");
+                    navigate("/profile/track");
                 }
-              });
+            });
         }
     });
 
@@ -125,14 +128,14 @@ export default function ShoppingOrder({ addressData, isFieldsFilled, setStartChe
                 <p>Products</p>
                 <span>Subtotal</span>
             </div>
-            <ul>
+            <ul className='max-h-[330px] overflow-y-scroll'>
                 {products?.data?.map((product: any) => { return (<ShoppingOrderCard product={product} />) })}
             </ul>
             <p className='text-end text-xs mt-5'>Have a coupon code? <span className='text-[#46A358] cursor-pointer' onClick={() => navigate('/shop/shopping_cart')}> Click here</span></p>
             <div className='pl-16'>
                 <div className='flex justify-between items-center my-3'>
                     <p >Subtotal</p>
-                    <span className='font-semibold text-base'>${products.total.toFixed(2)}</span>
+                    <span className='font-semibold text-base'>${(products.total).toFixed(2)}</span>
                 </div>
                 <div className='flex justify-between items-center my-3'>
                     <p >Coupon Discount</p>
@@ -164,7 +167,7 @@ export default function ShoppingOrder({ addressData, isFieldsFilled, setStartChe
                         <Radio value="cash" className="!border !rounded-md !px-3 py-2">Cash on delivery</Radio>
                     </Radio.Group>
                 </div>
-                <button onClick={handleOrder} disabled={products.data.length === 0} className={`bg-[#46A358] cursor-not-allowed transi logo text-white p-2 rounded w-full font-semibold ${products.data.length !== 0 ? "opacity-100" : "opacity-50"} `} >{isPending ? "Placing order" : "Place Order"}</button>
+                <button onClick={handleOrder} disabled={products.data.length === 0 || isPending} className={`bg-[#46A358] cursor-not-allowed transi logo text-white p-2 rounded w-full font-semibold ${products.data.length !== 0 || !isPending ? "opacity-100" : "opacity-50"} ${isPending ? "opacity-50" : "opacity-100"}`} >{isPending && <Spin indicator={<LoadingOutlined spin />} size="small" />} {isPending ? "Processing..." : "Place Order"}</button>
             </div>
         </div>
     )

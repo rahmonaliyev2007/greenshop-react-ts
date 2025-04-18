@@ -24,7 +24,6 @@ const Navbar: FC = () => {
     { name: "Home", path: "/" },
     { name: "Shop", path: "/shop" },
     { name: "Blog", path: "/blog" },
-    { name: "Plant Care", path: "/plantcare" },
   ];
 
   useEffect(() => {

@@ -17,6 +17,8 @@ import AboutUser from "./pages/AboutUser/AboutUser.jsx";
 import TrackOrder from "./pages/Profile/ProfileComponents/TrackOrder.js";
 import Shopping_Cart from "./pages/Shop/ShoppingCart";
 import Shopping_checkout from "./pages/Shop/ShoppingCheckout";
+import Blog from "./pages/Blog";
+import AboutBlog from "./pages/Blog/AboutBlog";
 
 function App() {
   return (
@@ -37,6 +39,9 @@ function App() {
             <Route element={<TrackOrder />} path="track" />
             <Route element={<NotFound />} path="*" />
           </Route>
+          
+          <Route element={<Blog />} path="/blog" />
+          <Route element={<AboutBlog />} path="/blog/:id" />
           <Route element={<AboutProduct />} path="/aboutProduct/:route_path/:id" />
           <Route element={<AboutUser />} path="/aboutuser/:userID" />
 
