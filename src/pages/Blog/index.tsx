@@ -65,13 +65,13 @@ export default function Blog() {
                                         <p className="text-sm text-gray-600">{blog.short_description?.slice(0, 200) || "No content"}...</p>
                                     </div>
                                     <div className="flex justify-between items-center mt-4 text-gray-400 text-sm px-5 border-t">
-                                        <div className="flex items-center gap-1 border-r px-5 py-3">
+                                        <div className="flex items-center gap-1 border-r pl-5 py-3 pr-10">
                                             <Eye size={16} /> {blog.views || 0}
                                         </div>
                                         <div className="flex items-center gap-1">
                                             <MessageCircle size={16} /> {blog.commentCount || 0}
                                         </div>
-                                        <div className="flex items-center gap-1 border-l px-5 py-3">
+                                        <div className="flex items-center gap-1 border-l pr-5 pl-10 py-3">
                                             <Heart size={16} /> {blog.likesCount || 0}
                                         </div>
                                     </div>
