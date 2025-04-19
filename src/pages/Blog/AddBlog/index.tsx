@@ -24,6 +24,7 @@ export default function AddBlog() {
         try {
             const access_token = getter({ key: "user" })?.user?._id
             await axios.post(`${api}user/blog?access_token=${access_token}`, blog);
+            toast.success('Blog added successfully');
             navigate('/blog')
         } catch (error) {
             toast.error('Please fill all fields');
