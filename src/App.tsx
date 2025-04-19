@@ -19,6 +19,7 @@ import Shopping_Cart from "./pages/Shop/ShoppingCart";
 import Shopping_checkout from "./pages/Shop/ShoppingCheckout";
 import Blog from "./pages/Blog";
 import AboutBlog from "./pages/Blog/AboutBlog";
+import AddBlog from "./pages/Blog/AddBlog";
 
 function App() {
   return (
@@ -39,8 +40,8 @@ function App() {
             <Route element={<TrackOrder />} path="track" />
             <Route element={<NotFound />} path="*" />
           </Route>
-          
           <Route element={<Blog />} path="/blog" />
+          <Route element={<AddBlog />} path="/blog/addblog" />
           <Route element={<AboutBlog />} path="/blog/:id" />
           <Route element={<AboutProduct />} path="/aboutProduct/:route_path/:id" />
           <Route element={<AboutUser />} path="/aboutuser/:userID" />

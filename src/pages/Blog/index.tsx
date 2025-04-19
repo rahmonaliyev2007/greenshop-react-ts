@@ -10,11 +10,8 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 const api = import.meta.env.VITE_PUBLIC_GREENSHOP_API;
 
 const GetBlogs = async (search: string) => {
-    const access_token =
-        getter({ key: "user" })?.user?._id || "67dbc36eaf06d13e0cde0c21";
-    const res = await axios.get(
-        `${api}user/blog?access_token=${access_token}&search=${search}`
-    );
+    const access_token = getter({ key: "user" })?.user?._id || "67dbc36eaf06d13e0cde0c21";
+    const res = await axios.get(`${api}user/blog?access_token=${access_token}&search=${search}`);
     return res.data;
 };
 
@@ -32,6 +29,15 @@ export default function Blog() {
     const handleSearch = () => {
         setSearchParams({ search: searchValue.trim() });
     };
+    const handleGoToAddBlog = ()=>{
+    const access_token = getter({ key: "user" })?.user?._id || "";
+        if(access_token) {
+            navigate('/blog/addblog');
+        }
+        else{
+            toast.error("Please login to add blog");
+        }
+    }
 
     return (
         <>
@@ -45,7 +51,7 @@ export default function Blog() {
             </div>
 
             <Tooltip title="Add New Article" placement="top">
-                <button className="text-gray-400 outline-none group mt-5" onClick={() => toast.info("You are not an admin")}>
+                <button className="text-gray-400 outline-none group mt-5" onClick={handleGoToAddBlog}>
                     <CirclePlus size={35} className="group-hover:rotate-180 rotate-0 transition-all duration-500" />
                 </button>
             </Tooltip>

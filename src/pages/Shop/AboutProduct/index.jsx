@@ -127,7 +127,6 @@ export default function AboutProduct() {
                         <div>
                             <h4 className='text-xl font-semibold text-black/80 my-2'>Short Description : </h4>
                             <p className='font-light '>{data?.short_description}</p>
-
                         </div>
                         <div>
                             <h4 className='text-xl font-semibold text-black/80 my-3'>Size : </h4>
@@ -150,7 +149,7 @@ export default function AboutProduct() {
                             <div>
                                 <h4 className='text-gray-500 my-3'>SKU : <span className='text-black/80 font-semibold '>{data?._id}</span></h4>
                                 <h4 className='text-gray-500 my-3'>Categories : <span className='text-black/80 font-semibold uppercase'>{data?.category}</span></h4>
-                                <h4 className='text-gray-500 my-3'>Tags : <span className='text-black/80 font-semibold '>{data?.tags && data?.tags.length > 1 ? data?.tags : 'No tags'}</span></h4>
+                                <h4 className='text-gray-500 my-3'>Tags : <span className='text-black/80 font-semibold uppercase'>{data?.tags && data?.tags.length > 1 ? `${data?.tags[0]} | ${data?.tags[1]} | ${data?.tags[2]}` : 'No tags'}</span></h4>
                             </div>
                         </div>
 
