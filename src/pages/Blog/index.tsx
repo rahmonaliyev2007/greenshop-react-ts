@@ -65,10 +65,10 @@ export default function Blog() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                         {data?.data?.length > 0 ? (
                             data.data.map((blog: any) => (
-                                <div key={blog._id} className="border rounded-lg pt-5 flex flex-col justify-between shadow-sm hover:shadow-md transition-all duration-300">
+                                <div key={blog?._id} className="border rounded-lg pt-5 flex flex-col justify-between shadow-sm hover:shadow-md transition-all duration-300">
                                     <div className="px-5">
-                                        <h3 className="text-xl font-semibold mb-2 hover:underline" onClick={()=> navigate(`/blog/${blog._id}`)}> {blog.title || "No Title"} </h3>
-                                        <p className="text-sm text-gray-600">{blog.short_description?.slice(0, 200) || "No content"}...</p>
+                                        <h3 className="text-xl font-semibold mb-2 hover:underline" onClick={()=> navigate(`/blog/${blog?._id}`)}> {blog?.title || "No Title"} </h3>
+                                        <p className="text-sm text-gray-600">{blog?.short_description?.slice(0, 200) || "No content"}...</p>
                                     </div>
                                     <div className="flex justify-between items-center mt-4 text-gray-400 text-sm px-5 border-t">
                                         <div className="flex items-center gap-1 border-r pl-5 py-3 pr-10">

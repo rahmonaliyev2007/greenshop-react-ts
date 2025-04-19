@@ -113,7 +113,7 @@ export default function AboutProduct() {
                     <div className='w-[50%]'>
                         <div className='flex justify-between items-center border-[#42A358]/40 pb-4 border-b-2 '  >
                             <div className='flex items-center gap-3 '>
-                                <div className='w-[60px] h-[60px] rounded-full overflow-hidden border-2 logo cursor-pointer border-[#42A358]' onClick={() => navigate(`/aboutUser/${userImg?._id}`)}><img className='w-full h-full object-cover' src={userImg?.profile_photo || "/default-user.png"} alt="user image" /></div>
+                                <div className='w-[60px] h-[60px] rounded-full overflow-hidden border-2 logo cursor-pointer border-[#42A358]' onClick={() => navigate(`/aboutUser/${userImg?._id}`)}><img className='w-full h-full object-cover' src={userImg?.profile_photo || "/default-user.png"} alt="user image" onError={(e) => { e.target.onerror = null; e.target.src = "https://img.freepik.com/premium-vector/vector-flat-illustration-grayscale-avatar-user-profile-person-icon-gender-neutral-silhouette-profile-picture-suitable-social-media-profiles-icons-screensavers-as-templatex9xa_719432-2210.jpg?semt=ais_hybrid&w=740"}} /></div>
                                 <div className='text-2xl font-semibold'>
                                     <h3>{data?.title}</h3>
                                     <p className='font-bold text-xl text-[#42A358]'>${data?.price}</p>

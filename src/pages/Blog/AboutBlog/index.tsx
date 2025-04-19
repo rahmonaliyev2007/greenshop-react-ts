@@ -99,7 +99,7 @@ export default function AboutBlog() {
         <div className='flex items-center gap-5'>
           <div className='w-16 rounded-full overflow-hidden cursor-pointer' onClick={() => navigate(`/aboutuser/${userImg?._id}`)}>
             <Tooltip title={`${userImg?.name} ${userImg?.surname}`}>
-              <img src={userImg?.profile_photo !== "" ? userImg?.profile_photo : "https://img.freepik.com/premium-vector/user-profile-icon-flat-style-member-avatar-vector-illustration-isolated-background-human-permission-sign-business-concept_157943-15752.jpg?semt=ais_hybrid&w=740"} alt="user image" />
+              <img src={userImg?.profile_photo} onError={(e) => { e.target.onerror = null; e.target.src = "https://img.freepik.com/premium-vector/vector-flat-illustration-grayscale-avatar-user-profile-person-icon-gender-neutral-silhouette-profile-picture-suitable-social-media-profiles-icons-screensavers-as-templatex9xa_719432-2210.jpg?semt=ais_hybrid&w=740"}}  alt="user image" />
             </Tooltip>
           </div>
           <div>

@@ -81,9 +81,9 @@ const ProductCard: FC<ProductData> = ({ data }) => {
                 <h4 onClick={() => navigate(`/aboutProduct/${route_path}/${id}`)} className="font-bold cursor-pointer mt-4 group-hover:text-[#46A358] transi group-hover:mt-2 group-hover:mb-2">{name}</h4>
                 {discountPercent !== 0 ? (
                     <p className="text-[#46A358] font-semibold">
-                        ${Number(discount_price).toFixed(2)} <span className="line-through text-gray-400 text-xs group-hover:text-sm transi">${price.toFixed(2)}</span>
+                        ${Number(discount_price)?.toFixed(2) || 0} <span className="line-through text-gray-400 text-xs group-hover:text-sm transi">${price?.toFixed(2) || 0}</span>
                     </p>
-                ) : (<p className="text-black font-semibold">${price.toFixed(2)}</p>)}
+                ) : (<p className="text-black font-semibold">${price?.toFixed(2) || 0}</p>)}
             </div>
         </div>
     );
