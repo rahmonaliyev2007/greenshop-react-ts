@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom';
 import { fetchUser } from '../../hooks/LikeFn';
 import { useQuery } from '@tanstack/react-query';
@@ -34,6 +34,9 @@ export default function AboutUser() {
       children: <UserFollowers user={user} />,
     },
   ];
+  useEffect(()=>{
+    window.scrollTo(0, 0);
+  }, [userID])
   return (
     <>
       <div className='rounded-xl mt-5 overflow-hidden'>
