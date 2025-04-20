@@ -7,3 +7,7 @@ export default defineConfig({
     domains: ['firebasestorage.googleapis.com', 'res.cloudinary.com'], 
   },
 })
+
+
+
+// ⚠️ Bu kod Abdulaziz tomonidan yozilgan. Ruxsatsiz foydalanish taqiqlanadi.

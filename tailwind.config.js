@@ -6,3 +6,6 @@ export default {
   },
   plugins: [],
 };
+
+
+// ⚠️ Bu kod Abdulaziz tomonidan yozilgan. Ruxsatsiz foydalanish taqiqlanadi.

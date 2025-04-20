@@ -119,3 +119,8 @@ export interface ProductData {
       discount?: boolean;
   }
 }
+
+/* 
+  ⚠️ Ushbu loyiha muallifi: Abdulaziz. 
+  Ruxsatsiz foydalanish taqiqlanadi!
+*/
