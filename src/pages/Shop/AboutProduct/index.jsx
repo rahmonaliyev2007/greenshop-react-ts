@@ -149,7 +149,7 @@ export default function AboutProduct() {
                             <div>
                                 <h4 className='text-gray-500 my-3'>SKU : <span className='text-black/80 font-semibold '>{data?._id}</span></h4>
                                 <h4 className='text-gray-500 my-3'>Categories : <span className='text-black/80 font-semibold uppercase'>{data?.category}</span></h4>
-                                <h4 className='text-gray-500 my-3'>Tags : <span className='text-black/80 font-semibold uppercase'>{data?.tags && data?.tags.length > 1 ? `${data?.tags[0]} | ${data?.tags[1]} | ${data?.tags[2]}` : 'No tags'}</span></h4>
+                                <h4 className='text-gray-500 my-3'>Tags : <span className='text-blue-500 font-semibold lowercase'>{data?.tags && data?.tags.length > 1 ? `#${data?.tags[0]}, #${data?.tags[1]}, #${data?.tags[2]}` : 'No tags'}</span></h4>
                             </div>
                         </div>
 
