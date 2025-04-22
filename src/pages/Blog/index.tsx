@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Tooltip } from "antd";
 import axios from "axios";
@@ -25,19 +25,18 @@ export default function Blog() {
         queryKey: ["getBlogs", search],
         queryFn: () => GetBlogs(search),
     });
+    useEffect(() => {
+        const delay = setTimeout(() => {
+            setSearchParams({ search: searchValue.trim() });
+        }, 500);
+        return () => clearTimeout(delay);
+    }, [searchValue]);
 
-    const handleSearch = () => {
-        setSearchParams({ search: searchValue.trim() });
+    const handleGoToAddBlog = () => {
+        const access_token = getter({ key: "user" })?.user?._id || "";
+        if (access_token) navigate("/blog/addblog");
+        else toast.error("Please login to add blog");
     };
-    const handleGoToAddBlog = ()=>{
-    const access_token = getter({ key: "user" })?.user?._id || "";
-        if(access_token) {
-            navigate('/blog/addblog');
-        }
-        else{
-            toast.error("Please login to add blog");
-        }
-    }
 
     return (
         <>
@@ -45,9 +44,7 @@ export default function Blog() {
 
             <div className="max-w-[700px] w-full flex m-auto items-center border rounded overflow-hidden">
                 <input type="text" value={searchValue} onChange={(e) => setSearchValue(e.target.value)} className="w-full outline-none py-2 px-4" placeholder="Search blogs..." />
-                <button className="px-4 py-2 border-l text-gray-400" onClick={handleSearch}>
-                    <Search />
-                </button>
+                <button className="px-4 py-2 border-l text-gray-400"><Search /></button>
             </div>
 
             <Tooltip title="Add New Article" placement="top">
@@ -67,19 +64,13 @@ export default function Blog() {
                             data.data.map((blog: any) => (
                                 <div key={blog?._id} className="border rounded-lg pt-5 flex flex-col justify-between shadow-sm hover:shadow-md transition-all duration-300">
                                     <div className="px-5">
-                                        <h3 className="text-xl font-semibold mb-2 hover:underline" onClick={()=> navigate(`/blog/${blog?._id}`)}> {blog?.title || "No Title"} </h3>
+                                        <h3 className="text-xl font-semibold mb-2 hover:underline cursor-pointer" onClick={() => navigate(`/blog/${blog?._id}`)}>{blog?.title || "No Title"}</h3>
                                         <p className="text-sm text-gray-600">{blog?.short_description?.slice(0, 200) || "No content"}...</p>
                                     </div>
                                     <div className="flex justify-between items-center mt-4 text-gray-400 text-sm px-5 border-t">
-                                        <div className="flex items-center gap-1 border-r pl-5 py-3 pr-10">
-                                            <Eye size={16} /> {blog.views || 0}
-                                        </div>
-                                        <div className="flex items-center gap-1">
-                                            <MessageCircle size={16} /> {blog.commentCount || 0}
-                                        </div>
-                                        <div className="flex items-center gap-1 border-l pr-5 pl-10 py-3">
-                                            <Heart size={16} /> {blog.likesCount || 0}
-                                        </div>
+                                        <div className="flex items-center gap-1 border-r pl-5 py-3 pr-10"><Eye size={16} /> {blog.views || 0}</div>
+                                        <div className="flex items-center gap-1"><MessageCircle size={16} /> {blog.commentCount || 0}</div>
+                                        <div className="flex items-center gap-1 border-l pr-5 pl-10 py-3"><Heart size={16} /> {blog.likesCount || 0}</div>
                                     </div>
                                 </div>
                             ))

@@ -35,7 +35,7 @@ const Navbar: FC = () => {
     }
   }, [isLogged])
   return (
-    <nav className="top-0 sticky w-full z-50 bg-white">
+    <nav className="top-5 sticky w-full z-50 bg-white">
       <div className="flex justify-between items-center max-w-[1240px] mx-auto py-5">
         <Link to="/" className="logo">
           <img src="/images/logo.svg" alt="logo" width={150} height={35} />
