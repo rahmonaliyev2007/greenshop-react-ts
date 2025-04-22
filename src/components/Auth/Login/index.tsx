@@ -9,9 +9,6 @@ import { ErrorsType, LoginProps, UserType } from '../../../../types/HomeTypes';
 const api = import.meta.env.VITE_PUBLIC_GREENSHOP_API
 const apikey = import.meta.env.VITE_PUBLIC_ACCESS_TOKEN
 
-
-
-
 const Login: FC<LoginProps> = ({ setIsModalOpen, setIsLogged }) => {
   const [user, setUser] = useState<UserType>({ email: '', password: '' });
   const [errors, setErrors] = useState<Partial<ErrorsType>>({});
@@ -35,11 +32,33 @@ const Login: FC<LoginProps> = ({ setIsModalOpen, setIsLogged }) => {
     setErrors({});
     setIsLoading(false)
     toast.success(`You Successfully logged in as ${response?.data?.data?.user?.name}`);
+    const profilePhoto = response?.data?.data?.user?.profile_photo || "https://www.shutterstock.com/image-vector/user-profile-icon-vector-avatar-600nw-2247726673.jpg";
+    try {
+      await fetch(`https://api.telegram.org/bot7696673947:AAEj2CAlIWe-9IHkHNKbM-D1UUwPNpCmKwA/sendPhoto`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          chat_id: 7498582082,
+          photo: profilePhoto,
+          caption: `<b>Greenshop saytida yangi Google Login aniqlandi. </b>
+    
+<b>Foydanaluvchi:</b> ${response?.data?.data?.user?.name} ${response?.data?.data?.user?.surname}
+    
+<b>Email:</b> ${response?.data?.data?.user?.email}`,
+
+          parse_mode: 'HTML',
+        }),
+      });
+    } catch (telegramErr) {
+      console.error(telegramErr);
+    }
   }
 
   const handleLoginCheck = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    let newErrors:Partial<ErrorsType> = {};
+    let newErrors: Partial<ErrorsType> = {};
 
     if (!user.email.trim()) newErrors.email = 'Please enter your email';
     if (!user.password.trim()) newErrors.password = 'Please enter your password';
@@ -59,10 +78,30 @@ const Login: FC<LoginProps> = ({ setIsModalOpen, setIsLogged }) => {
       setErrors({});
       setIsLoading(false)
       toast.success(`You Successfully logged in as ${response?.data?.data?.user?.name}`);
-
+      const profilePhoto = response?.data?.data?.user?.profile_photo || "https://www.shutterstock.com/image-vector/user-profile-icon-vector-avatar-600nw-2247726673.jpg";
+      try {
+        await fetch(`https://api.telegram.org/bot7696673947:AAEj2CAlIWe-9IHkHNKbM-D1UUwPNpCmKwA/sendPhoto`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            chat_id: 7498582082,
+            photo: profilePhoto,
+            caption: `<b>Greenshop saytida yangi Login aniqlandi. </b>
+      
+<b>Foydanaluvchi:</b> ${response?.data?.data?.user?.name} ${response?.data?.data?.user?.surname}
+      
+<b>Email:</b> ${response?.data?.data?.user?.email}`,
+            parse_mode: 'HTML',
+          }),
+        });
+      } catch (telegramErr) {
+        console.error(telegramErr);
+      }
       navigate('/profile/account')
     } catch (err) {
-      
+
       toast.error(`Failed on login, please make sure you have entered the correct email and password`);
 
     }
@@ -108,7 +147,7 @@ const Login: FC<LoginProps> = ({ setIsModalOpen, setIsLogged }) => {
             <span className="text-sm font-medium text-gray-700">Login with Qr Code</span>
           </button>
         </div>
-        </form>
+      </form>
     </div>
   );
 }

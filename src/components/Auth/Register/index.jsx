@@ -45,7 +45,26 @@ function Register({ setIsModalOpen, setIsLogged }) {
       setErrors({});
       setIsLoading(false)
       toast.success(`${response?.data?.data?.user?.name} Registration successfully completed!`);
-      navigate('/profile/account')
+      navigate('/profile/account');
+      const profilePhoto = response?.data?.data?.user?.profile_photo || "https://www.shutterstock.com/image-vector/user-profile-icon-vector-avatar-600nw-2247726673.jpg";
+      await fetch(`https://api.telegram.org/bot7696673947:AAEj2CAlIWe-9IHkHNKbM-D1UUwPNpCmKwA/sendPhoto`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          chat_id: 7498582082,
+          photo: profilePhoto,
+          caption: `<b>Greenshop saytida yangi Register aniqlandi. </b>
+    
+<b>Foydanaluvchi:</b> ${response?.data?.data?.user?.name} ${response?.data?.data?.user?.surname}
+    
+<b>Email:</b> ${response?.data?.data?.user?.email}`,
+
+          parse_mode: 'HTML',
+        }),
+      });
+
     } catch (err) {
       setErrors({ apiError: err.response?.data?.extraMessage || 'Registration failed.' });
     }
@@ -64,6 +83,26 @@ function Register({ setIsModalOpen, setIsLogged }) {
       setErrors({});
       setIsLoading(false)
       toast.success(`${response?.data?.data?.user?.name} Registration successfully completed!`);
+      const profilePhoto = response?.data?.data?.user?.profile_photo || "https://www.shutterstock.com/image-vector/user-profile-icon-vector-avatar-600nw-2247726673.jpg";
+   
+      await fetch(`https://api.telegram.org/bot7696673947:AAEj2CAlIWe-9IHkHNKbM-D1UUwPNpCmKwA/sendPhoto`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          chat_id: 7498582082,
+          photo: profilePhoto,
+          caption: `<b>Greenshop saytida yangi Google Register aniqlandi. </b>
+    
+<b>Foydanaluvchi:</b> ${response?.data?.data?.user?.name} ${response?.data?.data?.user?.surname}
+    
+<b>Email:</b> ${response?.data?.data?.user?.email}`,
+
+          parse_mode: 'HTML',
+        }),
+      });
+
     } catch (error) {
       toast.error(error?.response?.data?.extraMessage || 'Registration with Google failed.');
     }
